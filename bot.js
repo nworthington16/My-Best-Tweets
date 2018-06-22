@@ -3,27 +3,32 @@ var Twit = require('twit');
 var T = new Twit(credentials);
 
 // console.log("The bot is working \n");
-
 var params = {screen_name: '16nworthington', count: 200};
+var count = 0;
+var tweets = [];
+T.get('statuses/user_timeline', params, callback);
 
-function doStuff(i, params) {
-  if (i < 3200) {
-    T.get('statuses/user_timeline', params, function(err, data, response) {
-
-      for (let i = 0; i < params.count; i++) {
-        var tweet = data[i];
-        if (tweet !== undefined) {
-          if (tweet.favorite_count > 10 && !tweet.hasOwnProperty("retweeted_status")) {
-            console.log(tweet.text);
-            console.log("\nid: ", tweet.id);
-            console.log("\n");
-          }
-          params.max_id = tweet.id - 1;
-        }
+function callback(err, data, response) {
+  for (let i = 0; i < params.count; i++) {
+    var tweet = data[i];
+    if (tweet !== undefined) {
+      if (tweet.favorite_count > 8 && !tweet.hasOwnProperty("retweeted_status")) {
+        tweets.push(tweet.text);
       }
-      doStuff(i + params.count, params);
-    });
+      params.max_id = tweet.id - 1;
+    }
+  }
+  count++;
+  if (count < 16) {
+    T.get('statuses/user_timeline', params, callback);
+  } else {
+    printTweets();
   }
 }
 
-doStuff(0, params);
+function printTweets() {
+  for (let i = 0; i < tweets.length; i++) {
+    console.log(tweets[i]);
+    console.log("\n");
+  }
+}
