@@ -6,7 +6,10 @@ var T = new Twit(credentials);
 var params = {screen_name: '16nworthington', count: 200};
 var count = 0;
 var tweets = [];
-T.get('statuses/user_timeline', params, callback);
+
+function getTweets() {
+  T.get('statuses/user_timeline', params, callback);
+}
 
 function callback(err, data, response) {
   for (let i = 0; i < params.count; i++) {
