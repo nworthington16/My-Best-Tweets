@@ -1,12 +1,22 @@
-const credentials = require("./credentials");
-var Twit = require('twit');
-var T = new Twit(credentials);
+//const credentials = require("./credentials");
+require(['./credentials'], function(credentials) {
+  console.log('cred working');
+});
 
-// console.log("The bot is working \n");
+require(['twit'], function(twit) {
+  console.log('twit working');
+});
+//var Twit = require('twit');
+//var T = new Twit(credentials);
+
 var params = {screen_name: '16nworthington', count: 200};
 var count = 0;
 var tweets = [];
-T.get('statuses/user_timeline', params, callback);
+
+function grabTweets() {
+  //T.get('statuses/user_timeline', params, callback);
+  console.log(10);
+}
 
 function callback(err, data, response) {
   for (let i = 0; i < params.count; i++) {
