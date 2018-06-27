@@ -12,39 +12,39 @@ var count = 0;
 var tweets = [];
 
 app.get('/', function(req, res) {
-   res.sendfile('index.html');
+    res.sendfile('index.html');
 });
 
 http.listen(3000, function() {
-   console.log('listening on localhost:3000');
+    console.log('listening on localhost:3000');
 });
 
 io.on('connection', function(socket) {
-  T.get('statuses/user_timeline', params, callback);
+    T.get('statuses/user_timeline', params, callback);
 
-  function callback(err, data, response) {
-    for (let i = 0; i < params.count; i++) {
-      var tweet = data[i];
-      if (tweet !== undefined) {
-        if (tweet.favorite_count > 8 && !tweet.hasOwnProperty("retweeted_status")) {
-          tweets.push(tweet.text);
-          socket.emit('sendTweet', {tweet: tweet.text + '\n'});
+    function callback(err, data, response) {
+        for (let i = 0; i < params.count; i++) {
+            var tweet = data[i];
+            if (tweet !== undefined) {
+                if (tweet.favorite_count > 8 && !tweet.hasOwnProperty("retweeted_status")) {
+                    tweets.push(tweet.text);
+                    socket.emit('sendTweet', {tweet: tweet.text + '\n'});
+                }
+                params.max_id = tweet.id - 1;
+            }
         }
-        params.max_id = tweet.id - 1;
-      }
-    }
-    count++;
-    if (count < 16) {
-      T.get('statuses/user_timeline', params, callback);
-    }
-  }
+        count++;
+        if (count < 16) {
+            T.get('statuses/user_timeline', params, callback);
+        }
+     }
 });
 
 
 
 function printTweets() {
-  for (let i = 0; i < tweets.length; i++) {
-    console.log(tweets[i]);
-    console.log("\n");
-  }
+    for (let i = 0; i < tweets.length; i++) {
+        console.log(tweets[i]);
+        console.log("\n");
+    }
 }
