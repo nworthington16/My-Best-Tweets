@@ -1,29 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Title</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+
+      <title>Title</title>
+
+      <!-- Bootstrap -->
+      <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+
+      <!-- stylesheet isn't working (MIME type???) -->
+      <!-- <link type="text/css" href="css/style.css" rel="stylesheet"> -->
+      <style>
+          #num_likes, #submit {
+              margin-top: 10px;
+          }
+
+          #num_likes, #username {
+              width: 40%;
+          }
+
+          #header {
+              background-color: #b8d2fc
+          }
+      </style>
 </head>
 <body>
 
-<div class="jumbotron text-center">
-  <h1>Title</h1>
+<div class="jumbotron text-center" id="header">
+    <h1>My Best Tweets</h1>
+    <h4>Enter your Twitter username and an amount of likes to filter your tweets by!</h4>
 </div>
 
-<div class="container">
+<div class="container" id="inputs-body">
+    <input id="username" type="text" placeholder="Username" class="form-control">
+    <input id="num_likes" type="number" placeholder="Tweet Likes" class="form-control">
+    <button type="button" class="btn btn-primary" id="submit" onclick="getTweets()">Get Tweets</button>
+</div>
+
+<div class="container" id="tweets-body">
 
 </div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 
 <script>
-  var socket = io();
-  socket.on('sendTweet', function(data) {
-    document.write(data.tweet);
-  })
+      var socket = io();
+
+      function getTweets() {
+          $("#tweets-body").html("");
+
+          var user = document.getElementById('username').value;
+          var num_likes = document.getElementById('num_likes').value;
+
+          if (user.length > 0) {
+              socket.emit('request', {user: user, num_likes: num_likes});
+          } else {
+              alert("Please enter a valid username!");
+          }
+      }
+
+      socket.on('sendTweet', function(data) {
+          $("#tweets-body").append("<br>"
+          + "<h5>" + data.tweet + "</h5>" + "<br>");
+      })
 </script>
 
 </body>

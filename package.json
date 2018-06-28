@@ -2,15 +2,16 @@
   "name": "twitter_with_node",
   "version": "1.0.0",
   "description": "Messing around with twit",
-  "main": "bot.js",
+  "main": "main.js",
   "scripts": {
-    "start": "node bot.js",
+    "start": "nodemon main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Nick Worthington",
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.3",
+    "nodemon": "^1.17.5",
     "socket.io": "^2.1.1",
     "twit": "^2.2.10"
   }
