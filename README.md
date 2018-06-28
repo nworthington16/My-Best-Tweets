@@ -10,4 +10,3 @@ nodemon main.js
 ```
 
 Then navigate to **localhost:3000** in your browser.
-
