@@ -17,57 +17,68 @@
           }
 
           #num_likes, #username {
-              width: 40%;
+              width: 30%;
           }
 
           #header {
               background-color: #b8d2fc
           }
+
+          /* All div elements (tweets) that are children of id #tweets-body */
+          #tweets-body > div {
+              background-color: #e0e0e0;
+              padding: 10px;
+              width: 50%;
+              margin-top: 15px;
+              border-radius: 12px;
+          }
       </style>
 </head>
 <body>
 
-<div class="jumbotron text-center" id="header">
-    <h1>My Best Tweets</h1>
-    <h4>Enter your Twitter username and an amount of likes to filter your tweets by!</h4>
-</div>
+    <div class="jumbotron text-center" id="header">
+        <h1>My Best Tweets</h1>
+        <h4>Enter your Twitter username and an amount of likes to filter your tweets by!</h4>
+    </div>
 
-<div class="container" id="inputs-body">
-    <input id="username" type="text" placeholder="Username" class="form-control">
-    <input id="num_likes" type="number" placeholder="Tweet Likes" class="form-control">
-    <button type="button" class="btn btn-primary" id="submit" onclick="getTweets()">Get Tweets</button>
-</div>
+    <div class="container" id="inputs-body">
+        <input id="username" type="text" placeholder="Username" class="form-control">
+        <input id="num_likes" type="number" placeholder="Tweet Likes" class="form-control">
+        <button type="button" class="btn btn-primary" id="submit" onclick="getTweets()">Get Tweets</button>
+    </div>
 
-<div class="container" id="tweets-body">
+    <div class="container" id="tweets-body">
 
-</div>
+    </div>
 
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="/socket.io/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
 
-<script>
-      var socket = io();
+    <script>
+          var socket = io();
 
-      function getTweets() {
-          $("#tweets-body").html("");
+          function getTweets() {
+              $("#tweets-body").html("");
 
-          var user = document.getElementById('username').value;
-          var num_likes = document.getElementById('num_likes').value;
+              var user = document.getElementById('username').value;
+              var num_likes = document.getElementById('num_likes').value;
 
-          if (user.length > 0) {
-              socket.emit('request', {user: user, num_likes: num_likes});
-          } else {
-              alert("Please enter a valid username!");
+              if (user.length > 0) {
+                  socket.emit('request', {user: user, num_likes: num_likes});
+              } else {
+                  alert("Please enter a valid username!");
+              }
           }
-      }
 
-      socket.on('sendTweet', function(data) {
-          $("#tweets-body").append("<br>"
-          + "<h5>" + data.tweet + "</h5>" + "<br>");
-      })
-</script>
+          socket.on('sendTweet', function(data) {
+              var newTweet = "<div>"
+              + "<h5>" + data.tweet + "</h5>"
+              + "<div>";
+              $("#tweets-body").append(newTweet);
+          })
+    </script>
 
 </body>
 </html>
