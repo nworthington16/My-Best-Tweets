@@ -29,7 +29,9 @@ io.on('connection', function(socket) {
                 if (tweet !== undefined) {
                     if (tweet.favorite_count > num_likes && !tweet.hasOwnProperty("retweeted_status")) {
                         tweets.push(tweet);
-                        io.emit('sendTweet', {tweet: tweet.text + '\n'});
+                        io.emit('sendTweet', {tweet: tweet.text,
+                                                 id: tweet.id_str,
+                                               user: tweet.user.screen_name});
                     }
                     params.max_id = tweet.id - 1;
                 }
