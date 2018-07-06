@@ -17,9 +17,11 @@ app.get('/', function(req, res) {
 io.on('connection', function(socket) {
 
     socket.on('request', function(data) {
-        params.screen_name = data.user;
+        var screen_name = data.user;
         var num_likes = data.num_likes;
         var num_retweets = data.num_retweets;
+
+        params.screen_name = screen_name;
 
         T.get('statuses/user_timeline', params, callback);
 
@@ -37,7 +39,7 @@ io.on('connection', function(socket) {
                                                user: tweet.user.screen_name,
                                               likes: tweet.favorite_count,
                                            retweets: tweet.retweet_count,
-                                             replys: tweet.reply_count});
+                                               date: tweet.created_at});
                     }
                     params.max_id = tweet.id - 1;
                 }

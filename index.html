@@ -102,7 +102,6 @@
               }
           }
 
-          // TODO: make tweets clickable w/ link to tweet
           // TODO: Give option of likes and/or retweets
           socket.on('sendTweet', function(data) {
               var link = "https://twitter.com/" + data.user + "/status/" + data.id;
@@ -110,10 +109,7 @@
               + "<div class='container'>"
               + "<h5>" + data.tweet + "</h5>"
               + "</div>"
-              + "</a>";
-              // $("#tweets_col").append(newTweet);
-              // $("#likes_col").append("<h5>" + data.likes + "</h5>");
-              // $("#retweets_col").append("<h5>" + data.retweets + "</h5>");
+              + "</a>"
 
               var newRow = "<div class='row'>"
               + "<div class='col-md-6'>"
@@ -126,7 +122,7 @@
               + "<h5>" + data.retweets + "</h5>"
               + "</div>"
               + "<div class='col-md-2 text-center center'>"
-              + "<h5>" + data.replys + "</h5>"
+              + "<h5>" + data.date.substring(0, 11) + "</h5>"
               + "</div>"
               + "</div>";
               $("#main-body").append(newRow);
