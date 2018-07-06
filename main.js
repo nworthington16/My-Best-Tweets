@@ -19,6 +19,7 @@ io.on('connection', function(socket) {
     socket.on('request', function(data) {
         params.screen_name = data.user;
         var num_likes = data.num_likes;
+        var num_retweets = data.num_retweets;
 
         T.get('statuses/user_timeline', params, callback);
 
@@ -27,11 +28,16 @@ io.on('connection', function(socket) {
             for (let i = 0; i < params.count; i++) {
                 var tweet = data[i];
                 if (tweet !== undefined) {
-                    if (tweet.favorite_count > num_likes && !tweet.hasOwnProperty("retweeted_status")) {
+                    if (tweet.favorite_count >= num_likes
+                        && tweet.retweet_count >= num_retweets
+                        && !tweet.hasOwnProperty("retweeted_status")) {
                         tweets.push(tweet);
                         io.emit('sendTweet', {tweet: tweet.text,
                                                  id: tweet.id_str,
-                                               user: tweet.user.screen_name});
+                                               user: tweet.user.screen_name,
+                                              likes: tweet.favorite_count,
+                                           retweets: tweet.retweet_count,
+                                             replys: tweet.reply_count});
                     }
                     params.max_id = tweet.id - 1;
                 }

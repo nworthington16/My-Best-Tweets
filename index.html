@@ -12,12 +12,16 @@
       <!-- stylesheet isn't working (MIME type???) -->
       <!-- <link type="text/css" href="css/style.css" rel="stylesheet"> -->
       <style>
+          body {
+              padding-bottom: 30px;
+          }
+
           #num_likes, #submit {
               margin-top: 0px;
           }
 
-          #num_likes, #username {
-              width: 80%;
+          #submit {
+              width: 100%;
           }
 
           #header {
@@ -33,12 +37,16 @@
           }
 
           /* All div elements (tweets) that are children of id #tweets-body */
-          #tweets-body > a > div {
+          #main-body div > div > a > div {
               background-color: #f2f2f2;
               padding: 10px;
-              width: 50%;
               margin-top: 15px;
               border-radius: 8px;
+          }
+
+          .center {
+              margin: auto;
+              padding-top: 15px;
           }
       </style>
 </head>
@@ -49,21 +57,24 @@
         <h4>Enter your Twitter username and an amount of likes to filter your tweets by!</h4>
     </div>
 
-    <div class="container" id="inputs-body">
+    <div class="container" id="input-body">
         <div class="row">
-            <div class="col-md-5">
+            <div class="col-md-6" id="tweets_col">
                 <input id="username" type="text" placeholder="Username" class="form-control">
             </div>
-            <div class="col-md-5">
-                <input id="num_likes" type="number" placeholder="Tweet Likes" class="form-control">
+            <div class="col-md-2" id="likes_col">
+                <input id="num_likes" type="number" placeholder="# Likes" class="form-control">
             </div>
-            <div class="col-md-2">
-                <button type="button" class="btn btn-primary" id="submit" onclick="getTweets()">Get Tweets</button>
+            <div class="col-md-2" id="retweets_col">
+                <input id="num_retweets" type="number" placeholder="# Retweets" class="form-control">
+            </div>
+            <div class="col-md-2" id="get_tweets">
+                <button type="button" class="btn btn-primary block" id="submit" onclick="getTweets()">Get Tweets</button>
             </div>
         </div>
     </div>
 
-    <div class="container" id="tweets-body">
+    <div class="container" id="main-body">
 
     </div>
 
@@ -76,13 +87,16 @@
           var socket = io();
 
           function getTweets() {
-              $("#tweets-body").html("");
+              $("#main-body").html("");
 
               var user = document.getElementById('username').value;
               var num_likes = document.getElementById('num_likes').value;
+              var num_retweets = document.getElementById('num_retweets').value;
 
               if (user.length > 0) {
-                  socket.emit('request', {user: user, num_likes: num_likes});
+                  socket.emit('request', {user: user,
+                                     num_likes: num_likes,
+                                  num_retweets: num_retweets});
               } else {
                   alert("Please enter a valid username!");
               }
@@ -97,7 +111,25 @@
               + "<h5>" + data.tweet + "</h5>"
               + "</div>"
               + "</a>";
-              $("#tweets-body").append(newTweet);
+              // $("#tweets_col").append(newTweet);
+              // $("#likes_col").append("<h5>" + data.likes + "</h5>");
+              // $("#retweets_col").append("<h5>" + data.retweets + "</h5>");
+
+              var newRow = "<div class='row'>"
+              + "<div class='col-md-6'>"
+              + newTweet
+              + "</div>"
+              + "<div class='col-md-2 text-center center'>"
+              + "<h5>" + data.likes + "</h5>"
+              + "</div>"
+              + "<div class='col-md-2 text-center center'>"
+              + "<h5>" + data.retweets + "</h5>"
+              + "</div>"
+              + "<div class='col-md-2 text-center center'>"
+              + "<h5>" + data.replys + "</h5>"
+              + "</div>"
+              + "</div>";
+              $("#main-body").append(newRow);
           })
     </script>
 
