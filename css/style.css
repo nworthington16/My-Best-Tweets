@@ -1,0 +1,36 @@
+body {
+    padding-bottom: 30px;
+}
+
+#num_likes, #submit {
+    margin-top: 0px;
+}
+
+#submit {
+    width: 100%;
+}
+
+#header {
+    background-color: #cee5ff
+}
+
+a:link {
+    color: black;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+/* All div elements (tweets) that are children of id #tweets-body */
+#main-body div > div > a > div {
+    background-color: #f2f2f2;
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 8px;
+}
+
+.center {
+    margin: auto;
+    padding-top: 15px;
+}
