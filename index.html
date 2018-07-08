@@ -4,7 +4,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
 
-      <title>Title</title>
+      <title>Fil(Twit)ter</title>
 
       <!-- Bootstrap -->
       <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" type="text/css" rel="stylesheet">
@@ -26,6 +26,10 @@
 
           #header {
               background-color: #cee5ff
+          }
+
+          a {
+              color: black;
           }
 
           a:link {
@@ -53,7 +57,7 @@
 <body>
 
     <div class="jumbotron text-center" id="header">
-        <h1>My Best Tweets</h1>
+        <h1>Fil(Twit)ter</h1>
         <h4>Enter your Twitter username and an amount of likes to filter your tweets by!</h4>
     </div>
 
@@ -70,6 +74,21 @@
             </div>
             <div class="col-md-2" id="get_tweets">
                 <button type="button" class="btn btn-primary block" id="submit" onclick="getTweets()">Get Tweets</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 text-center center">
+                <h5><b>Tweet</b><h5>
+            </div>
+            <div class="col-md-2 text-center center">
+                <a href='#' id='likesButton'><h5><b>Likes</b></h5></a>
+            </div>
+            <div class="col-md-2 text-center center">
+                <a href='#' id='retweetsButton'><h5><b>Retweets</b></h5></a>
+            </div>
+            <div class="col-md-2 text-center center">
+                <a href='#' id='dateButton'><h5><b>Date</b></h5></a>
             </div>
         </div>
     </div>
@@ -100,9 +119,18 @@
               } else {
                   alert("Please enter a valid username!");
               }
+
+              // var topRow = constructRow("<h5><b>Tweet</b></h5>",
+              //                           "<a href='#' id='likesButton'><b>Likes</b></a>",
+              //                           "<a href='#' id='retweetsButton'><b>Retweets</b></a>",
+              //                           "<a href='#' id='dateButton'><b>Date</b></a>");
+              //$("#main-body").append(topRow);
           }
 
           // TODO: Give option of likes and/or retweets
+          // TODO: Show media (pics / videos)
+          // TODO: Show entire tweet text
+          // TODO: Sort by the different columns
           socket.on('sendTweet', function(data) {
               var link = "https://twitter.com/" + data.user + "/status/" + data.id;
               var newTweet = "<a href=" + link + ">"
@@ -111,22 +139,35 @@
               + "</div>"
               + "</a>"
 
+              var date = data.date.substring(0, 11) + data.date.substring(data.date.length - 4, data.date.length);
+              var newRow = constructRow(newTweet, data.likes, data.retweets, date);
+              $("#main-body").append(newRow);
+          });
+
+          function constructRow(tweet, likes, retweets, date) {
               var newRow = "<div class='row'>"
-              + "<div class='col-md-6'>"
-              + newTweet
+              + "<div class='col-md-6 text-center center'>"
+              + tweet
               + "</div>"
               + "<div class='col-md-2 text-center center'>"
-              + "<h5>" + data.likes + "</h5>"
+              + "<h5>" + likes + "</h5>"
               + "</div>"
               + "<div class='col-md-2 text-center center'>"
-              + "<h5>" + data.retweets + "</h5>"
+              + "<h5>" + retweets + "</h5>"
               + "</div>"
               + "<div class='col-md-2 text-center center'>"
-              + "<h5>" + data.date.substring(0, 11) + "</h5>"
+              + "<h5>" + date + "</h5>"
               + "</div>"
               + "</div>";
-              $("#main-body").append(newRow);
-          })
+              return newRow;
+          }
+
+          $("a").click(function() {
+             var id = $(this).attr('id');
+             $("#main-body").html("");
+             socket.emit('sortBy', {col: id});
+          });
+
     </script>
 
 </body>

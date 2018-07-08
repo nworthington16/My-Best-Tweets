@@ -6,7 +6,9 @@ const credentials = require("./credentials");
 var Twit = require('twit');
 var T = new Twit(credentials);
 
-var params = {screen_name: '', count: 200};
+var params = {screen_name: '',
+              count: 200,
+              include_rts: false};
 var count = 0;
 var tweets = [];
 
@@ -14,9 +16,9 @@ app.get('/', function(req, res) {
     res.sendfile('index.html');
 });
 
-io.on('connection', function(socket) {
+io.on('connection', socket => {
 
-    socket.on('request', function(data) {
+    socket.on('request', data => {
         var screen_name = data.user;
         var num_likes = data.num_likes;
         var num_retweets = data.num_retweets;
@@ -31,15 +33,15 @@ io.on('connection', function(socket) {
                 var tweet = data[i];
                 if (tweet !== undefined) {
                     if (tweet.favorite_count >= num_likes
-                        && tweet.retweet_count >= num_retweets
-                        && !tweet.hasOwnProperty("retweeted_status")) {
-                        tweets.push(tweet);
-                        io.emit('sendTweet', {tweet: tweet.text,
-                                                 id: tweet.id_str,
-                                               user: tweet.user.screen_name,
-                                              likes: tweet.favorite_count,
-                                           retweets: tweet.retweet_count,
-                                               date: tweet.created_at});
+                        && tweet.retweet_count >= num_retweets) {
+                            shortenedTweet = {tweet: tweet.text,
+                                                     id: tweet.id_str,
+                                                   user: tweet.user.screen_name,
+                                                  likes: tweet.favorite_count,
+                                               retweets: tweet.retweet_count,
+                                                   date: tweet.created_at};
+                            tweets.push(shortenedTweet);
+                            io.emit('sendTweet', shortenedTweet);
                     }
                     params.max_id = tweet.id - 1;
                 }
@@ -54,6 +56,43 @@ io.on('connection', function(socket) {
                 params.max_id = tweets[0].id;
             }
          }
+    });
+
+    socket.on('sortBy', data => {
+        var col = data.col;
+        if (col === 'likesButton') {
+            console.log('likes');
+            tweets.sort(function(a, b) {
+                var aLikes = a.likes;
+                var bLikes = b.likes;
+                if (aLikes > bLikes) {
+                    return 1;
+                } else if (aLikes < bLikes) {
+                    return -1;
+                }
+                return 0;
+            });
+            for (let i = tweets.length - 1; i >= 0; i--) {
+                io.emit('sendTweet', tweets[i]);
+            }
+        } else if (col === 'retweetsButton') {
+            console.log('retweets');
+            tweets.sort(function(a, b) {
+                var aRetweets = a.retweets;
+                var bRetweets = b.retweets;
+                if (aRetweets > bRetweets) {
+                    return 1;
+                } else if (aRetweets < bRetweets) {
+                    return -1;
+                }
+                return 0;
+            });
+            for (let i = tweets.length - 1; i >= 0; i--) {
+                io.emit('sendTweet', tweets[i]);
+            }
+        } else if (col === 'dateButton') {
+            console.log('date');
+        }
     });
 
 });
