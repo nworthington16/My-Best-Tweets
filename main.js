@@ -1,6 +1,8 @@
-var app = require('express')();
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var path = require('path');
 
 const credentials = require("./credentials");
 var Twit = require('twit');
@@ -11,6 +13,8 @@ var params = {screen_name: '',
               include_rts: false};
 var count = 0;
 var tweets = [];
+
+app.use(express.static(path.join(__dirname, '/css')));
 
 app.get('/', function(req, res) {
     res.sendfile('index.html');

@@ -9,49 +9,8 @@
       <!-- Bootstrap -->
       <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" type="text/css" rel="stylesheet">
 
-      <!-- stylesheet isn't working (MIME type???) -->
-      <!-- <link type="text/css" href="css/style.css" rel="stylesheet"> -->
-      <style>
-          body {
-              padding-bottom: 30px;
-          }
+      <link type="text/css" href="/style.css" rel="stylesheet">
 
-          #num_likes, #submit {
-              margin-top: 0px;
-          }
-
-          #submit {
-              width: 100%;
-          }
-
-          #header {
-              background-color: #cee5ff
-          }
-
-          a {
-              color: black;
-          }
-
-          a:link {
-              color: black;
-          }
-
-          a:hover {
-              text-decoration: none;
-          }
-
-          #main-body div > div > a > div {
-              background-color: #f2f2f2;
-              padding: 10px;
-              margin-top: 15px;
-              border-radius: 8px;
-          }
-
-          .center {
-              margin: auto;
-              padding-top: 15px;
-          }
-      </style>
 </head>
 <body>
 
@@ -91,7 +50,6 @@
             </div>
         </div>
     </div>
-
     <div class="container" id="main-body">
 
     </div>
@@ -99,7 +57,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-
     <script>
           var socket = io();
 
@@ -149,6 +106,5 @@
           });
 
     </script>
-
 </body>
 </html>
