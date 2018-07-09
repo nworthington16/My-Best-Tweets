@@ -19,6 +19,8 @@ app.get('/', function(req, res) {
 io.on('connection', socket => {
 
     socket.on('request', data => {
+        tweets = [];
+
         var screen_name = data.user;
         var num_likes = data.num_likes;
         var num_retweets = data.num_retweets;
@@ -60,8 +62,9 @@ io.on('connection', socket => {
 
     socket.on('sortBy', data => {
         var col = data.col;
+
         if (col === 'likesButton') {
-            console.log('likes');
+            
             tweets.sort(function(a, b) {
                 var aLikes = a.likes;
                 var bLikes = b.likes;
@@ -72,11 +75,13 @@ io.on('connection', socket => {
                 }
                 return 0;
             });
+
             for (let i = tweets.length - 1; i >= 0; i--) {
                 io.emit('sendTweet', tweets[i]);
             }
+
         } else if (col === 'retweetsButton') {
-            console.log('retweets');
+
             tweets.sort(function(a, b) {
                 var aRetweets = a.retweets;
                 var bRetweets = b.retweets;
@@ -87,21 +92,34 @@ io.on('connection', socket => {
                 }
                 return 0;
             });
+
             for (let i = tweets.length - 1; i >= 0; i--) {
                 io.emit('sendTweet', tweets[i]);
             }
+
         } else if (col === 'dateButton') {
-            console.log('date');
+
             tweets.sort(function(a, b) {
-                var aDate = a.date;
-                var bDate = b.date;
-                var aMonth = aDate.substring(4, 7);
-                var bMonth = bDate.substring(4, 7);
-                var aDay = aDate.substring(8, 10);
-                var bDay = bDate.substring(8, 10);
-                var aYear = aDate.substring(aDate.length - 4, aDate.length);
-                var bYear = bDate.substring(bDate.length - 4, bDate.length);
+                var aDate = (a.date.substring(a.date.length - 4, a.date.length)
+                    + '-' + a.date.substring(4, 7)
+                    + '-' + a.date.substring(8, 10));
+                var bDate = (b.date.substring(b.date.length - 4, b.date.length)
+                    + '-' + b.date.substring(4, 7)
+                    + '-' + b.date.substring(8, 10));
+                aDate = new Date(aDate);
+                bDate = new Date(bDate);
+                if (aDate > bDate) {
+                    return 1;
+                } else if (aDate < bDate) {
+                    return -1;
+                }
+                return 0;
             });
+
+            for (let i = tweets.length - 1; i >= 0; i--) {
+                io.emit('sendTweet', tweets[i]);
+            }
+
         }
     });
 
