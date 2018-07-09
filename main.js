@@ -37,11 +37,11 @@ io.on('connection', socket => {
                     if (tweet.favorite_count >= num_likes
                         && tweet.retweet_count >= num_retweets) {
                             shortenedTweet = {tweet: tweet.text,
-                                                     id: tweet.id_str,
-                                                   user: tweet.user.screen_name,
-                                                  likes: tweet.favorite_count,
-                                               retweets: tweet.retweet_count,
-                                                   date: tweet.created_at};
+                                                 id: tweet.id_str,
+                                               user: tweet.user.screen_name,
+                                              likes: tweet.favorite_count,
+                                           retweets: tweet.retweet_count,
+                                               date: tweet.created_at};
                             tweets.push(shortenedTweet);
                             io.emit('sendTweet', shortenedTweet);
                     }
@@ -64,7 +64,7 @@ io.on('connection', socket => {
         var col = data.col;
 
         if (col === 'likesButton') {
-            
+
             tweets.sort(function(a, b) {
                 var aLikes = a.likes;
                 var bLikes = b.likes;

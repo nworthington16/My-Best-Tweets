@@ -39,7 +39,7 @@
           a:hover {
               text-decoration: none;
           }
-          
+
           #main-body div > div > a > div {
               background-color: #f2f2f2;
               padding: 10px;
@@ -96,7 +96,6 @@
 
     </div>
 
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
@@ -118,19 +117,14 @@
               } else {
                   alert("Please enter a valid username!");
               }
-
           }
 
-          // TODO: Give option of likes and/or retweets
           // TODO: Show media (pics / videos)
           // TODO: Show entire tweet text
-          // TODO: Sort by the different columns
           socket.on('sendTweet', function(data) {
               var link = "https://twitter.com/" + data.user + "/status/" + data.id;
               var newTweet = "<a href=" + link + ">"
-              + "<div class='container'>"
-              + "<h5>" + data.tweet + "</h5>"
-              + "</div>"
+              + "<div class='container'><h5>" + data.tweet + "</h5></div>"
               + "</a>"
 
               var date = data.date.substring(0, 11) + data.date.substring(data.date.length - 4, data.date.length);
@@ -140,18 +134,10 @@
 
           function constructRow(tweet, likes, retweets, date) {
               var newRow = "<div class='row'>"
-              + "<div class='col-md-6 text-center center'>"
-              + tweet
-              + "</div>"
-              + "<div class='col-md-2 text-center center'>"
-              + "<h5>" + likes + "</h5>"
-              + "</div>"
-              + "<div class='col-md-2 text-center center'>"
-              + "<h5>" + retweets + "</h5>"
-              + "</div>"
-              + "<div class='col-md-2 text-center center'>"
-              + "<h5>" + date + "</h5>"
-              + "</div>"
+              + "<div class='col-md-6 text-center center'>" + tweet + "</div>"
+              + "<div class='col-md-2 text-center center'><h5>" + likes + "</h5></div>"
+              + "<div class='col-md-2 text-center center'><h5>" + retweets + "</h5></div>"
+              + "<div class='col-md-2 text-center center'><h5>" + date + "</h5></div>"
               + "</div>";
               return newRow;
           }
