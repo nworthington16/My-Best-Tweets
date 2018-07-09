@@ -92,6 +92,16 @@ io.on('connection', socket => {
             }
         } else if (col === 'dateButton') {
             console.log('date');
+            tweets.sort(function(a, b) {
+                var aDate = a.date;
+                var bDate = b.date;
+                var aMonth = aDate.substring(4, 7);
+                var bMonth = bDate.substring(4, 7);
+                var aDay = aDate.substring(8, 10);
+                var bDay = bDate.substring(8, 10);
+                var aYear = aDate.substring(aDate.length - 4, aDate.length);
+                var bYear = bDate.substring(bDate.length - 4, bDate.length);
+            });
         }
     });
 
