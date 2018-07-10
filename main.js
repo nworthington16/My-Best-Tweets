@@ -64,10 +64,22 @@ io.on('connection', socket => {
          }
     });
 
+    var sortedByDate = true;
+    var sortedByLikes = false;
+    var sorteedByRetweets = false;
+
     socket.on('sortBy', data => {
         var col = data.col;
 
         if (col === 'likesButton') {
+
+            if (sortedByLikes) {
+                for (let i = 0; i < tweets.length; i++) {
+                    io.emit('sendTweet', tweets[i]);
+                }
+                sortedByLikes = false;
+                return;
+            }
 
             tweets.sort(function(a, b) {
                 var aLikes = a.likes;
@@ -84,7 +96,18 @@ io.on('connection', socket => {
                 io.emit('sendTweet', tweets[i]);
             }
 
+            sortedByLikes = true;
+            sortedByDate, sortedByRetweets = false;
+
         } else if (col === 'retweetsButton') {
+
+            if (sortedByRetweets) {
+                for (let i = 0; i < tweets.length; i++) {
+                    io.emit('sendTweet', tweets[i]);
+                }
+                sortedByRetweets = false;
+                return;
+            }
 
             tweets.sort(function(a, b) {
                 var aRetweets = a.retweets;
@@ -101,7 +124,18 @@ io.on('connection', socket => {
                 io.emit('sendTweet', tweets[i]);
             }
 
+            sortedByRetweets = true;
+            sortedByLikes, sortedByDate = false;
+
         } else if (col === 'dateButton') {
+
+            if (sortedByDate) {
+                for (let i = 0; i < tweets.length; i++) {
+                    io.emit('sendTweet', tweets[i]);
+                }
+                sortedByDate = false;
+                return;
+            }
 
             tweets.sort(function(a, b) {
                 var aDate = (a.date.substring(a.date.length - 4, a.date.length)
@@ -123,6 +157,9 @@ io.on('connection', socket => {
             for (let i = tweets.length - 1; i >= 0; i--) {
                 io.emit('sendTweet', tweets[i]);
             }
+
+            sortedByDate = true;
+            sortedByLikes, sortedByRetweets = false;
 
         }
     });
