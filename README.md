@@ -10,3 +10,5 @@ nodemon main.js
 ```
 
 Then navigate to **localhost:3000** in your browser.
+
+Jk don't know if that will work because the twitter authentication file is hidden lol
